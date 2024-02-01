@@ -8,7 +8,7 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: netflz2.2
+  name: netflzapp
   namespace: netflzapp
   labels:
     app: netflzapp
