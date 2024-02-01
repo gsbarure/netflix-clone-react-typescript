@@ -2,29 +2,29 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: netflz2.2
+  name: netflzapp
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: netflz2.2
-  namespace: netflz2.2
+  namespace: netflzapp
   labels:
-    app: netflz2.2
+    app: netflzapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: netflz2.2
+      app: netflzapp
   template:
     metadata:
       labels:
-        app: netflz2.2
+        app: netflzapp
     spec:
       containers:
-        - name: netflz2.2
-          image: limkel/netflz:2.2
+        - name: netflzapp
+          image: limkel/netflzapp
           ports:
             - containerPort: 80
 
@@ -32,10 +32,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: netflz2.2
-  namespace: netflz2.2
+  name: netflzapp
+  namespace: netflzapp
   labels:
-    app: netflz2.2
+    app: netflzapp
 spec:
   type: NodePort
   ports:
@@ -43,4 +43,4 @@ spec:
       targetPort: 80
       nodePort: 30007
   selector:
-    app: netflz2.2
+    app: netflzapp
