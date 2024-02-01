@@ -28,7 +28,7 @@ pipeline{
         stage("4.0 Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Shoppin-netflzapp -Dsonar.java.binaries=. -Dsonar.projectKey=netflzapp '''
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=netflzapp -Dsonar.java.binaries=. -Dsonar.projectKey=netflzapp '''
                 }
             }
         }
