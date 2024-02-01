@@ -68,7 +68,7 @@ pipeline{
                 script{
                     dir('Kubernetes') {
                         withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'spjt', namespace: 'netflzapp', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
-                                sh 'kubectl apply -f /root/appnode/workspace/netflzapp/Kubernetes/deployment.yml -n netflzapp'
+                                sh 'kubectl apply -f /root/appnode/workspace/netflzapp/deployment.yml -n netflzapp'
                                 sh 'kubectl get po -n netflzapp'
                                 sh 'kubectl get svc  -n netflzapp'
                         }   
