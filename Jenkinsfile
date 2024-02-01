@@ -32,6 +32,13 @@ pipeline{
                 }
             }
         }
+        stage('Quality Check') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar' 
+                }
+            }
+        }
         stage("5.0 Trivy FS SCAN") {
             steps {
                 sh "trivy fs ."
@@ -41,18 +48,18 @@ pipeline{
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                       sh "docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t netflz . -f /root/appnode/workspace/Netflz2.2/Dockerfile"
-                       sh "docker tag netflz limkel/netflz:2.2 "
-                       sh "docker push limkel/netflz:2.2 "
-                       sh "trivy image limkel/netflz:2.2 > trivyimage.txt"
-                       sh "docker rmi -f limkel/netflz:2.2 "
+                       sh "docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t netflzapp . -f /root/appnode/workspace/netflzapp/Dockerfile"
+                       sh "docker tag netflzapp limkel/netflzapp "
+                       sh "docker push limkel/netflzapp "
+                       sh "trivy image limkel/netflzapp > trivyimage.txt"
+                       sh "docker rmi -f limkel/netflzapp "
                     }
                 }
             }
         }
         stage("7.0 TRIVY"){
             steps{
-                sh "trivy image limkel/netflz:2.2 > trivyimage.txt" 
+                sh "trivy image limkel/netflzapp > trivyimage.txt" 
             }
         }
         
@@ -61,9 +68,9 @@ pipeline{
                 script{
                     dir('Kubernetes') {
                         withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'spjt', namespace: 'netflz', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.49.2:8443') {
-                                sh 'kubectl apply -f /root/appnode/workspace/Netflz2.0/Kubernetes/deployment.yml -n netflz2.2'
-                                sh 'kubectl get po -n netflz2.2'
-                                sh 'kubectl get svc  -n netflz2.2'
+                                sh 'kubectl apply -f /root/appnode/workspace/netflzapp/Kubernetes/deployment.yml -n netlzapp'
+                                sh 'kubectl get po -n netflzapp'
+                                sh 'kubectl get svc  -n netflzapp'
                         }   
                     }
                 }
