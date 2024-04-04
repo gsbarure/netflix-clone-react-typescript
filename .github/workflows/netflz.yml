@@ -37,6 +37,6 @@ jobs:
 
       - name: Run security scans
         run: |
-          trivy your_image_name
-          dockle your_image_name
+          trivy limkel/netflx:2.0
+          dockle limkel/netflx:2.0
           dependency-check/bin/dependency-check.sh --limkel/netflx:2.0
