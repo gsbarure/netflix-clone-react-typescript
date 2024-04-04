@@ -29,8 +29,8 @@ jobs:
 
       - name: Install Trivy
         run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.deb
-          sudo dpkg -i trivy_0.20.0_Linux-64bit.deb
+           wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.tar.gz
+          tar zxvf trivy_0.20.0_Linux-64bit.tar.gz
 
       - name: Build Docker image
         run: docker build -f Dockerfile2 -t limkel/netflx:2.0  .
