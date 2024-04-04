@@ -24,6 +24,6 @@ jobs:
           sudo apt install -y npm
 
       - name: Build Docker image
-        run: docker build -f Dockerfile2 -t limkel/netflx:2.0 .
+        run: docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t netflzapp . -f Dockerfile2
 
      
