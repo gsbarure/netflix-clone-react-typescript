@@ -19,7 +19,6 @@ jobs:
       - name: Install necessary packages
         run: |
           sudo apt install -y npm
-          npm install -g trivy
           npm install -g dockle
 
       - name: Install OWASP dependency-check
@@ -28,11 +27,16 @@ jobs:
           unzip dependency-check-7.0.0-release.zip
           chmod +x dependency-check/bin/dependency-check.sh
 
+      - name: Install Trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.20.0/trivy_0.20.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.20.0_Linux-64bit.deb
+
       - name: Build Docker image
-        run: docker build -f dockerfile2 -t limkel/netflx:2.0 .
+        run: docker build -f Dockerfile2 -t limkel/netflx:2.0  .
 
       - name: Run security scans
         run: |
-          trivy limkel/netflx:2.0
-          dockle limkel/netflx:2.0
-          dependency-check/bin/dependency-check.sh --scan limkel/netflx:2.0
+          trivy your_image_name
+          dockle your_image_name
+          dependency-check/bin/dependency-check.sh --limkel/netflx:2.0
