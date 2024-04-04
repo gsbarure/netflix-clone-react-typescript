@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag netflz:1.1
+      run: docker build . --file Dockerfile1 --tag netflz:1.1
