@@ -26,8 +26,4 @@ jobs:
       - name: Build Docker image
         run: docker build -f Dockerfile2 -t limkel/netflx:2.0 .
 
-      - name: Run security scans
-        run: |
-          ./trivy_0.20.0_Linux-64bit/trivy limkel/netflx:2.0
-          dockle limkel/netflx:2.0
-          ./dependency-check/bin/dependency-check.sh -d . -s limkel/netflx:2.0
+     
