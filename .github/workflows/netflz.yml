@@ -19,7 +19,7 @@ jobs:
       - name: Install necessary packages
         run: |
           sudo apt install -y npm
-          npm install -g dockle
+          
 
       - name: Install OWASP dependency-check
         run: |
