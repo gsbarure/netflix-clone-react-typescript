@@ -1,0 +1,38 @@
+name: Docker Build and Security Scan
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Upgrade apt packages
+        run: sudo apt update && sudo apt upgrade -y
+
+      - name: Install necessary packages
+        run: |
+          sudo apt install -y npm
+          npm install -g trivy
+          npm install -g dockle
+
+      - name: Install OWASP dependency-check
+        run: |
+          wget https://dl.bintray.com/jeremy-long/owasp/dependency-check-7.0.0-release.zip
+          unzip dependency-check-7.0.0-release.zip
+          chmod +x dependency-check/bin/dependency-check.sh
+
+      - name: Build Docker image
+        run: docker build -f dockerfile2 -t limkel/netflx:2.0 .
+
+      - name: Run security scans
+        run: |
+          trivy limkel/netflx:2.0
+          dockle limkel/netflx:2.0
+          dependency-check/bin/dependency-check.sh --scan limkel/netflx:2.0
