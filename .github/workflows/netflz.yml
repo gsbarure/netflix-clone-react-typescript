@@ -19,13 +19,6 @@ jobs:
       - name: Install necessary packages
         run: |
           sudo apt install -y npm
-          
-
-      - name: Install OWASP dependency-check
-        run: |
-          wget https://dl.bintray.com/jeremy-long/owasp/dependency-check-7.0.0-release.zip
-          unzip dependency-check-7.0.0-release.zip
-          chmod +x dependency-check/bin/dependency-check.sh
 
       - name: Install Trivy
         run: |
