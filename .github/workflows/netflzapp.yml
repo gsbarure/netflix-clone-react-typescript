@@ -38,7 +38,7 @@ jobs:
           DOCKER_CLI_ACI: 1
   deploy:
     needs: build-analyze-scan
-    runs-on: [aws-netflix]
+    runs-on: self-hosted
     steps:
       - name: Pull the docker image
         run: docker pull limkel/netflzapp:3.0
