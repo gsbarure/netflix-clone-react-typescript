@@ -6,7 +6,7 @@ on:
 jobs:
   build-analyze-scan:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -45,4 +45,4 @@ jobs:
       - name: Trivy image scan
         run: trivy image limkel/netflzapp:3.0
       - name: Run the container netflix
-        run: docker run -d --name netflix -p 8081:80 limkel/netflzapp:3.0
+        run: docker run -d --name netflzapp -p 8287:80 limkel/netflzapp:3.0
