@@ -1,48 +1,51 @@
-name: FortressIT Consults Inc.
+name: Docker Build and Deploy
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  build-analyze-scan:
-    name: Build
-    runs-on: self-hosted
+  build:
+    name: Build and Analyze
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Build and analyze with SonarQube
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      - name: install trivy
+
+      - name: Install Trivy
         run: |
-           #install trivy
-           sudo apt-get install wget apt-transport-https gnupg lsb-release -y
-           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-           echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-           sudo apt-get update
-           sudo apt-get install trivy -y
-           #scanning files
-           trivy fs .
+          sudo apt-get update
+          sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy -y
+
+      - name: Scan Docker image with Trivy
+        run: trivy image limkel/netflzapp:3.0
+
       - name: Docker build and push
         run: |
-          #run commands to build and push docker images
           docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t limkel/netflzapp:3.0 . -f Dockerfile2
-          docker tag netflzapp limkel/netflzapp:3.0
+          docker tag limkel/netflzapp:3.0 limkel/netflzapp:latest
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
           docker push limkel/netflzapp:3.0
-        env:
-          DOCKER_CLI_ACI: 1
+          docker push limkel/netflzapp:latest
+
   deploy:
-    needs: build-analyze-scan
+    name: Deploy
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Pull the docker image
         run: docker pull limkel/netflzapp:3.0
-      - name: Trivy image scan
-        run: trivy image limkel/netflzapp:3.0
+
       - name: Run the container netflix
         run: docker run -d --name netflzapp -p 8287:80 limkel/netflzapp:3.0
