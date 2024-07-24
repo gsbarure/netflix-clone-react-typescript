@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: netflzapp
-          image: limkel/netflzapp
+          image: iscanprint/netflzapp:3.0
           ports:
             - containerPort: 80
 
