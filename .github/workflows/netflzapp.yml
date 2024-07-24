@@ -28,19 +28,10 @@ jobs:
 
       - name: Docker build and push
         run: |
-          docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t limkel/netflzapp:3.0 . -f Dockerfile2
-          docker tag limkel/netflzapp:3.0 limkel/netflzapp:latest
+          docker build --build-arg TMDB_V3_API_KEY=36a50cd7bedc727a9c31ebf3d41fc568 -t iscanprint/netflzapp:3.0 . -f Dockerfile2
+         
           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push limkel/netflzapp:3.0
-          docker push limkel/netflzapp:latest
+          docker push iscanprint/netflzapp:3.0
+          docker push iscanprint/netflzapp:3.0
 
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: self-hosted
-    steps:
-      - name: Pull the docker image
-        run: docker pull limkel/netflzapp:3.0
-
-      - name: Run the container netflix
-        run: docker run -d --name netflzapp -p 8287:80 limkel/netflzapp:3.0
+ 
